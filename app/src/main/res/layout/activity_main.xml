@@ -3,18 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.sunyy.card.MainActivity">
-    <Button
-        android:gravity="center"
+    <LinearLayout
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/restart_btn"
-        android:text="重新播放动画"/>
+        android:orientation="vertical"
+        android:id="@+id/layout_bottom">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:id="@+id/edit"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layout_btns">
+            <Button
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/restart_btn"
+                android:text="重新播放动画"/>
+            <Button
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/duration_btn"
+                android:text="重设动画时长"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
     <RelativeLayout
-        android:layout_above="@+id/restart_btn"
+        android:layout_above="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/content_view"></RelativeLayout>
