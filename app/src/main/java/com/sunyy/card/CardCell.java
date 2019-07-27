@@ -1,6 +1,8 @@
 package com.sunyy.card;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,17 +24,22 @@ public class CardCell {
     private Bitmap mTargetContentBitmap;
     private float mRy;
     private Camera mCamera;
-    public CardCell(Bitmap contentBitmap, Bitmap varietyBitmap) {
+    private Bitmap mTargetBitmap;
+    private Resources mRes;
+    public CardCell(Resources resources, int contentBitmapId, int varietyBitmapId) {
         mCamera = new Camera();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(Color.WHITE);
         mMatrix = new Matrix();
-        mContentBitmap = contentBitmap;
-        mVarietyBitmap = varietyBitmap;
-
+        mRes = resources;
+        mContentBitmap = BitmapFactory.decodeResource(resources, contentBitmapId);
+        mVarietyBitmap = BitmapFactory.decodeResource(resources, varietyBitmapId);
     }
 
-    public void draw(Canvas canvas, Rect rect, Bitmap cardBitmap) {
+    public void draw(Canvas canvas, Rect rect, int cardBitmapId) {
+        if (mTargetBitmap == null) {
+            mTargetBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(mRes, cardBitmapId), rect.width(), rect.height(), false);
+        }
         canvas.save();
         canvas.translate(rect.left + rect.width(), rect.top + rect.height() / 2);
         mCamera.save();
@@ -58,8 +65,8 @@ public class CardCell {
         float tx = (rect.width() - mTargetContentBitmap.getWidth()) / 2;
         float ty = (rect.height() - mTargetContentBitmap.getHeight()) / 2;
         if (mRy > 90) {
-            if (cardBitmap != null) {
-                canvas.drawBitmap(cardBitmap, mMatrix, mPaint);
+            if (mTargetBitmap != null) {
+                canvas.drawBitmap(mTargetBitmap, mMatrix, mPaint);
             }
         } else {
             if (mTargetVarietyBitmap != null) {

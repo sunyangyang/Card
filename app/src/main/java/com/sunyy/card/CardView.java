@@ -42,14 +42,8 @@ public class CardView extends View {
     private int mCardHeight;
     private int mVerticalSpace;
     private int mHorizontalSpace;
-    private int mCardLayoutHeight;
-    private Paint mPaint;
-    private int mPageBlockPaddingLeft;
-    private int mPageBlockPaddingRight;
-    private Bitmap mCardBitmap;
-    private Bitmap mTargetCardBitmap;
+    private int mCardBitmapId;
     private Resources mRes;
-    private String mContent;
     private Context mContext;
 
     public CardView(Context context, String content) {
@@ -62,7 +56,7 @@ public class CardView extends View {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 MyInfo info = list.get(i);
-                CardCell cell = new CardCell(info.mContentBitmap, info.mVarietyBitmap);
+                CardCell cell = new CardCell(mRes, info.mContentBitmapId, info.mVarietyBitmapId);
                 mCellList.add(cell);
             }
         }
@@ -136,11 +130,12 @@ public class CardView extends View {
         mCardHeight = Const.dip2px(mContext, 154);
         mVerticalSpace = Const.dip2px(mContext, 60);
         mHorizontalSpace = Const.dip2px(mContext, 20);
-        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
-        mPageBlockPaddingLeft = Const.dip2px(mContext, 10);
-        mPageBlockPaddingRight = Const.dip2px(mContext, 10);
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCardBitmap = BitmapFactory.decodeResource(mRes, R.mipmap.tw_card);
+//        mCardLayoutHeight = mPaddingBottom + mPaddingTop + mCardHeight * 2 + mVerticalSpace;
+//        mPageBlockPaddingLeft = Const.dip2px(mContext, 10);
+//        mPageBlockPaddingRight = Const.dip2px(mContext, 10);
+//        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        mCardBitmapId = R.mipmap.tw_card;
     }
 
     protected void init() {
@@ -169,13 +164,13 @@ public class CardView extends View {
                 } else {
                     isBlack = false;
                 }
-                info.mVarietyBitmap = BitmapFactory.decodeResource(mRes, id);
+                info.mVarietyBitmapId = id;
                 for (int j = 0; j < mContents.length; j++) {
                     if (TextUtils.equals(info.mContent, mContents[j])) {
                         if (isBlack) {
-                            info.mContentBitmap = BitmapFactory.decodeResource(mRes, mBlackIds[j]);
+                            info.mContentBitmapId = mBlackIds[j];
                         } else {
-                            info.mContentBitmap = BitmapFactory.decodeResource(mRes, mRedIds[j]);
+                            info.mContentBitmapId = mRedIds[j];
                         }
                     }
                 }
@@ -200,15 +195,12 @@ public class CardView extends View {
             int top = rect.top + (line * (mCardHeight + mVerticalSpace));
             int left = rect.left + (column * (mCardWidth + mHorizontalSpace));
             Rect cellRect = new Rect(left, top, left + mCardWidth, top + mCardHeight);
-            if (getCardBitmap() != null && mTargetCardBitmap == null) {
-                mTargetCardBitmap = Bitmap.createScaledBitmap(getCardBitmap(), cellRect.width(), cellRect.height(), false);
-            }
-            cell.draw(canvas, cellRect, mTargetCardBitmap);
+            cell.draw(canvas, cellRect, getCardBitmapId());
         }
     }
 
-    protected Bitmap getCardBitmap() {
-        return mCardBitmap;
+    protected int getCardBitmapId() {
+        return mCardBitmapId;
     }
 
     public interface MyAnimatorListener extends ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
@@ -216,8 +208,8 @@ public class CardView extends View {
 
     public class MyInfo {
         String mContent;
-        Bitmap mVarietyBitmap;
-        Bitmap mContentBitmap;
+        int mVarietyBitmapId;
+        int mContentBitmapId;
     }
 
     protected List<MyInfo> getInfoList() {
